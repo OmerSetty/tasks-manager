@@ -44,6 +44,7 @@ function mainController($scope, $window, $mdSidenav, $mdDialog, $mdToast, usersS
   // $scope.userId = "5fc6b94cc15c9a0415fd2d8c";
   // $scope.getTasksOfDay();
 
+  
   usersService.getLoggedUserId()
   .then(result => {
     $scope.userId = result.data.userId;
