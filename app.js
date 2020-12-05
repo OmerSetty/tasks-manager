@@ -12,7 +12,7 @@ const mainRouter = require('./routes/mainRouter');
 const uri = "mongodb+srv://dbSetty:c2zhrkt2kkkdb@cluster0.fayd1.mongodb.net/setty?retryWrites=true&w=majority";
 mongoose.connect(uri, { useNewUrlParser: true })
 .then(() => console.log("connected to db"))
-.catch((err) => console.log(err));
+.catch((err) => console.log(err)); 
 
 // mongoose.connect('mongodb://localhost/setty')
 // .then(() => console.log("connected to db"))
