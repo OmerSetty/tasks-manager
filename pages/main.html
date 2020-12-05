@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="vendors/angular/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.24/angular-material.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-messages.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.17/angular-filter.min.js" integrity="sha512-f2q5tYQJ0pnslHkuVw7tm7GP7E0BF1YLckJjgLU5z4p1vNz78Jv+nPIEKtZerevbt/HwEfYnRrAo9U3u4m0UHw==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js"></script>
+  <script src="https://unpkg.com/ng-material-datetimepicker/dist/angular-material-datetimepicker.min.js"></script>
+  <script src="https://unpkg.com/ng-material-datetimepicker/dist/angular-material-datetimepicker.min.js.map"></script>
+  <link href="https://unpkg.com/ng-material-datetimepicker/dist/material-datetimepicker.min.css" rel="stylesheet" type="text/css">
+
+  <script src="app/mainApp.js"></script>
+  <script src="app/usersService.js"></script>
+  <script src="app/main/mainFactory.js"></script>
+  <script src="app/main/mainController.js"></script>
+  <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.1.21/angular-material.css">
+  <link rel="stylesheet" type="text/css" href="css/mainStyles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+  <title>main</title>
+</head>
+
+<body ng-app="mainApp" ng-controller="mainController">
+  
+  <div layout="row">
+    <md-sidenav ng-cloak="" md-component-id="left" md-is-locked-open="true" class="md-sidenav-left">
+      
+      <md-button class="button logo" md-no-ink="true">
+        <md-icon md-svg-src="/svg/done_outline-24px.svg" aria-label="android "></md-icon>
+      </md-button>
+      <div position="relative">
+        <md-button class="button" md-no-ink="true">Tasks</md-button>
+        <md-button class="button" md-no-ink="true">Proccesses</md-button>
+        <md-button class="button" md-no-ink="true">Projects</md-button>
+        <md-button class="button button-logout" ng-click="logOut()">
+          Log Out
+        </md-button>
+      </div>
+      
+      <!-- <md-button class="button-top-row button-logout" ng-click="logOut()">
+        Log Out
+      </md-button> -->
+    </md-sidenav>
+  
+    <div ng-cloak="" class="tabsdemoCenterTabs" flex="">
+      <md-content>
+        <md-tabs md-dynamic-height="" class="tabs-container">
+          <md-tab md-tab-class="section-title" label="Tasks" ng-disabled="true"></md-tab>
+          <md-tab label="List">
+
+            <md-content class="md-padding each-tab">
+              <div layout="row">
+                <md-button class="button init-order" md-no-ink="true" ng-click="filterBy = {}">
+                  <md-icon class="init-order-icon" md-svg-src="/svg/cancel-black-36dp.svg" aria-label="android "></md-icon>
+                </md-button>
+
+                <md-select ng-model="filterBy" md-selected-text="filterText()" class="md-no-underline" aria-label="filter">
+                  <md-optgroup label="{{field}}" ng-repeat="(field, fieldValues) in filterList">
+                    <md-option ng-repeat="fieldValue in fieldValues" ng-value="{field: '{{field}}', value: '{{fieldValue}}'}">{{fieldValue}}</md-option>
+                  </md-optgroup>
+                </md-select>
+                
+                <md-input-container style="width: 15%;" md-no-float="">
+                  <input class="field-value title-value" type="text" ng-model="filterByText" aria-label="title" placeholder="filter tasks by text..."></input>
+                </md-input-container>
+                <md-button class="button init-order" md-no-ink="true" ng-click="showAllTasks()">
+                  <md-icon class="init-order-icon" md-svg-src="/svg/cancel-black-36dp.svg" aria-label="android "></md-icon>
+                </md-button>
+                <md-select ng-model="userData.groupBy" ng-change="groupField()" md-selected-text="'Group by: ' + userData.groupBy" class="md-no-underline" aria-label="group">
+                  <md-option value="category">category</md-option>
+                  <md-option value="priority">priority</md-option>
+                </md-select>
+
+                <md-button class="button-top-row button-add-task" ng-click="showTaskAddition($event)">
+                  Add Task
+                </md-button>
+
+                
+              </div>
+
+              <md-list>
+                <div ng-repeat="(key, group) in tasksOfDay | groupBy: userData.groupBy" ng-show="filteredTasks[$index].length > 0">
+                  <md-list-item class="general-row table-data">
+                    <p class="col-group" ng-style="{'color': 'white', 'background-color': COLORS[$index]}" flex="nogrow">{{key}}</p>
+                    <p class="col-amount" flex="">&nbsp; &nbsp;{{tasksAmount(filteredTasks[$index].length)}}</p>
+                    <p ng-show="$first" flex="10" class="col-value">deadline</p>
+                    <p ng-show="$first" flex="10" class="col-value">assignee</p>
+                    <p ng-show="$first" flex="10" class="col-value">status</p>
+                    <p ng-show="$first" flex="10" class="col-value">{{dynamicField}}</p>
+                  </md-list-item>
+                  
+                  <div layout="row" ng-repeat="task in ($parent.filteredTasks[$index] = (group | filterBy: ['title']: filterByText | filter: setTaskFilter))" ng-hide="task[hide]">
+                    <md-button ng-disabled="task.assignee != userData.username && task.assignee != 'Everyone' && !userData.isAdmin" class="button delete" ng-click="deleteTask(task)">
+                      <md-icon class="delete-icon" md-svg-src="/svg/delete-black-36dp.svg" aria-label="android "></md-icon>
+                    </md-button>
+                    <md-button ng-disabled="task.assignee != userData.username && task.assignee != 'Everyone' && !userData.isAdmin" class="button delete" ng-click="showTaskEdition($event, task)">
+                      <md-icon class="delete-icon" md-svg-src="/svg/edit-black-36dp.svg" aria-label="android "></md-icon>
+                    </md-button>
+                    <md-list-item class="general-row table-row task-row md-no-proxy" ng-style="{'background-color': doneClass(task)}" md-no-ink="true">
+                      <md-checkbox ng-checked="task.status == 'done'" ng-click="doTask(task)" aria-label="checked"></md-checkbox>
+                      <md-input-container flex="60" md-no-float="">
+                        <input ng-readonly="task.assignee != userData.username && task.assignee != 'Everyone' && !userData.isAdmin" class="field-value title-value" type="text" ng-model="task.title" ng-keypress="enterPressed($event, 'update', task, 'title')" aria-label="title"></input>
+                      </md-input-container>
+                      <md-input-container md-no-float="" flex="10">
+                        <input ng-readonly="task.assignee != userData.username && task.assignee != 'Everyone' && !userData.isAdmin" class="field-select deadline" mdc-datetime-picker date="false" time="true" type="text"
+                          show-todays-date click-outside-to-close="true" placeholder="{{task.deadline}}" auto-ok="true"
+                          min-date="minDate" edit-input="true" minute-steps="1" ng-change="updateTask(task, ['deadline'])"
+                          ng-model="task.deadline">
+                        </input>
+                      </md-input-container>
+                      <md-select flex="10" ng-model="task.assignee" ng-change="updateTask(task, ['assignee'])" class="md-no-underline field-select" md-container-class="option2" aria-label="assignee">
+                        <md-option ng-disabled="task.assignee != userData.username && task.assignee != 'Everyone' && !userData.isAdmin" ng-repeat="assignee in values.assignee" ng-value="assignee">{{assignee}}</md-option>
+                      </md-select>
+                      <md-select flex="10" ng-model="task.status" ng-change="updateTask(task, ['status'])" class="md-no-underline field-select" md-container-class="option2" aria-label="status">
+                        <md-option ng-disabled="task.assignee != userData.username && task.assignee != 'Everyone' && !userData.isAdmin" ng-repeat="status in values.status" ng-value="status">{{status}}</md-option>
+                      </md-select>
+                      <md-select ng-show="dynamicField == 'priority'" flex="10" ng-model="task.priority" ng-change="updateTask(task, ['priority'])" class="md-no-underline field-select" md-container-class="option2" aria-label="priority">
+                        <md-option ng-disabled="task.assignee != userData.username && task.assignee != 'Everyone' && !userData.isAdmin" ng-repeat="priority in values.priority" ng-value="priority">{{priority}}</md-option>
+                      </md-select>
+                      <md-select ng-show="dynamicField == 'category'" flex="10" ng-model="task.category" ng-change="updateTask(task, ['category'])" class="md-no-underline field-select" md-container-class="option2" aria-label="category">
+                        <md-option ng-disabled="task.assignee != userData.username && task.assignee != 'Everyone' && !userData.isAdmin" ng-repeat="category in values.category" ng-value="category">{{category}}</md-option>
+                      </md-select>
+                      
+                    </md-list-item>
+                    
+                  </div>
+                  
+                  <md-list-item class="general-row add-row task-row md-no-proxy" md-no-ink="true">
+                    <md-button class="button add" ng-click="addTaskOfKey(key)">
+                      <md-icon class="delete-icon" md-svg-src="/svg/add-24px.svg" aria-label="android "></md-icon>
+                    </md-button>
+                    <md-input-container style="width: 60%;" md-no-float="">
+                      <input class="field-value title-value" type="text" ng-model="newTasks[key]['title']" ng-keypress="enterPressed($event, 'add', 'null', key)" aria-label="title" placeholder="add new task..."></input>
+                    </md-input-container>
+                    <md-input-container flex="10" md-no-float="">
+                      <input class="field-select deadline" mdc-datetime-picker date="false" time="true" type="text"
+                        show-todays-date click-outside-to-close="true" placeholder="-" auto-ok="true"
+                        min-date="minDate" minute-steps="1" ng-model="newTasks[key]['deadline']">
+                      </input>
+                    </md-input-container>
+                    <md-select flex="10" placeholder="-" ng-model="newTasks[key]['assignee']" class="md-no-underline field-select" aria-label="assignee">
+                      <md-option ng-repeat="assignee in values.assignee" ng-value="assignee">{{assignee}}</md-option>
+                    </md-select>
+                    <md-select flex="10" placeholder="-" ng-model="newTasks[key]['status']" class="md-no-underline field-select" aria-label="status">
+                      <md-option ng-repeat="status in values.status" ng-value="status">{{status}}</md-option>
+                    </md-select>
+                    <md-select flex="10" ng-show="dynamicField == 'priority'" placeholder="-" ng-model="newTasks[key]['priority']" class="md-no-underline field-select" aria-label="priority">
+                      <md-option ng-repeat="priority in values.priority" ng-value="priority">{{priority}}</md-option>
+                    </md-select>
+                    <md-select flex="10" ng-show="dynamicField == 'category'" placeholder="-" ng-model="newTasks[key]['category']" class="md-no-underline field-select" aria-label="category">
+                      <md-option ng-repeat="category in values.category" ng-value="category">{{category}}</md-option>
+                    </md-select>
+                    </md-list-item>
+                </div>
+              </md-list>
+            </md-content>
+          </md-tab>
+          <md-tab label="Board">
+            <md-content class="md-padding each-tab">
+              <h2 class="md-display-1">Tab Two</h2>
+              <p class="md-body-1">
+                Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa
+                orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in
+                condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim,
+                at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus.
+                Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa
+                orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in
+                condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim,
+                at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus.
+                Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa
+                orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in
+                condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim,
+                at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus.
+                Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa
+                orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in
+                condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim,
+                at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus.
+                Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa
+                orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in
+                condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim,
+                at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus.
+              </p>
+            </md-content>
+          </md-tab>
+          
+        </md-tabs>
+      </md-content>
+    </div>
+  </div>
+  
+  <div><script type="text/ng-template" id="addTaskDialog.html">
+    <md-dialog aria-label="Mango (Fruit)">
+    <form ng-cloak>
+      <md-toolbar>
+        <div class="md-toolbar-tools">
+          <h2>Add Task</h2>
+        </div>
+      </md-toolbar>
+
+      <md-dialog-content>
+        <div class="md-dialog-content">
+          <h2>Add New Task</h2>
+          <md-input-container class="edit-title">
+            <label>title</label>
+            <input type="text" ng-model="newTasks['general']['title']" placeholder="add new task..." aria-label="title"/>
+          </md-input-container>
+          <br>
+          <md-input-container class="edit-title">
+            <label>description</label>
+            <textarea ng-model="newTasks['general']['description']" placeholder="..." md-maxlength="150" md-select-on-focus=""></textarea>
+          </md-input-container>
+          <br>
+          <div layout="row">
+            <md-input-container flex="33" md-no-float="" class="field-select-dialog">
+              <label style="text-align: center;">deadline</label>
+              <input class="field-select-dialog" mdc-datetime-picker date="false" time="true" type="text"
+                show-todays-date click-outside-to-close="true" auto-ok="true"
+                min-date="minDate" minute-steps="1" ng-model="newTasks['general']['deadline']">
+            </md-input-container>
+            <md-input-container flex="33" class="field-select-dialog">
+              <label>assignee</label>
+              <md-select ng-model="newTasks['general']['assignee']" md-container-class="option2" aria-label="assignee">
+                <md-option ng-repeat="assignee in values.assignee" ng-value="assignee">{{assignee}}</md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container flex="33" class="field-select-dialog">
+              <label>status</label>
+              <md-select ng-model="newTasks['general']['status']" md-container-class="option2" aria-label="status">
+                <md-option ng-repeat="status in values.status" ng-value="status">{{status}}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          
+          <div layout="row">
+            <md-input-container flex="50" class="field-select-dialog">
+              <label>category</label>
+              <md-select ng-model="newTasks['general']['category']" md-container-class="option2" aria-label="category">
+                <md-option ng-repeat="category in values.category" ng-value="category">{{category}}</md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container flex="50" class="field-select-dialog">
+              <label>priority</label>
+              <md-select ng-model="newTasks['general']['priority']" md-container-class="option2" aria-label="priority">
+                <md-option ng-repeat="priority in values.priority" ng-value="priority">{{priority}}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          
+        
+        </div>
+      </md-dialog-content>
+  
+      <md-dialog-actions>
+        <md-button ng-click="addGeneralTask()">
+          Save
+        </md-button>
+      </md-dialog-actions>
+    </form>
+  </md-dialog>
+  </script></div>
+
+  <div><script type="text/ng-template" id="editTaskDialog.html">
+    <md-dialog aria-label="Mango (Fruit)">
+    <form ng-cloak>
+      <md-toolbar>
+        <div class="md-toolbar-tools">
+          <h2>Edit Task</h2>
+        </div>
+      </md-toolbar>
+  
+      <md-dialog-content>
+        <div class="md-dialog-content">
+          <h2>Edit Task</h2>
+          <md-input-container class="edit-title">
+            <label>title</label>
+            <input type="text" ng-model="editedTask.title" ng-change="addEditedField('title')" aria-label="title"/>
+          </md-input-container>
+          <br>
+          <md-input-container class="edit-title">
+            <label>description</label>
+            <textarea ng-model="editedTask.description" ng-change="addEditedField('description')" md-maxlength="150" md-select-on-focus=""></textarea>
+          </md-input-container>
+          <br>
+          <div layout="row">
+            <md-input-container flex="33" md-no-float="" class="field-select-dialog edit-deadline">
+              <label style="text-align: center;">deadline</label>
+              <input class="field-select-dialog" mdc-datetime-picker date="false" time="true" type="text"
+                show-todays-date click-outside-to-close="true" placeholder="{{editedTask.deadline}}" auto-ok="true"
+                min-date="minDate" minute-steps="1" ng-change="addEditedField('deadline')" ng-model="editedTask.deadline">
+            </md-input-container>
+            <md-input-container flex="33" class="field-select-dialog">
+              <label>assignee</label>
+              <md-select ng-model="editedTask.assignee" ng-change="addEditedField('assignee')" md-container-class="option2" aria-label="assignee">
+                <md-option ng-repeat="assignee in values.assignee" ng-value="assignee">{{assignee}}</md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container flex="33" class="field-select-dialog">
+              <label>status</label>
+              <md-select ng-model="editedTask.status" ng-change="addEditedField('status')" md-container-class="option2" aria-label="status">
+                <md-option ng-repeat="status in values.status" ng-value="status">{{status}}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          
+          <div layout="row">
+            <md-input-container flex="50" class="field-select-dialog">
+              <label>category</label>
+              <md-select ng-model="editedTask.category" ng-change="addEditedField('category')" md-container-class="option2" aria-label="category">
+                <md-option ng-repeat="category in values.category" ng-value="category">{{category}}</md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container flex="50" class="field-select-dialog">
+              <label>priority</label>
+              <md-select ng-model="editedTask.priority" ng-change="addEditedField('priority')" md-container-class="option2" aria-label="priority">
+                <md-option ng-repeat="priority in values.priority" ng-value="priority">{{priority}}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          
+        </div>
+      </md-dialog-content>
+  
+      <md-dialog-actions>
+        <md-button ng-click="editTask(editedTask)">
+          Save
+        </md-button>
+      </md-dialog-actions>
+    </form>
+  </md-dialog>
+  </script></div>
+
+</body>
+</html> 

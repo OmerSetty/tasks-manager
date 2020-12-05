@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <title>Login</title>
+  <script src="vendors/angular/angular.min.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.24/angular-material.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-messages.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.17/angular-filter.min.js" integrity="sha512-f2q5tYQJ0pnslHkuVw7tm7GP7E0BF1YLckJjgLU5z4p1vNz78Jv+nPIEKtZerevbt/HwEfYnRrAo9U3u4m0UHw==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js"></script>
+  <script src="https://unpkg.com/ng-material-datetimepicker/dist/angular-material-datetimepicker.min.js"></script>
+  <script src="https://unpkg.com/ng-material-datetimepicker/dist/angular-material-datetimepicker.min.js.map"></script>
+  <link href="https://unpkg.com/ng-material-datetimepicker/dist/material-datetimepicker.min.css" rel="stylesheet" type="text/css">
+
+  <script src="app/mainApp.js"></script>
+  <script src="app/usersService.js"></script>
+  <script src="app/index/indexFactory.js"></script>
+  <script src="app/index/indexController.js"></script>
+  <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.1.21/angular-material.css">
+  <link rel="stylesheet" href="vendors/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+</head>
+
+<body ng-app="mainApp" ng-controller="indexController">
+  <div class="modal-dialog text-center">
+  <div ng-class="showRegistrationClass" class="col-sm-9 login-section">
+    <div class="modal-content">
+    <div class="col-12 user-img">
+      <img src="images/pretty-face.png">
+    </div>
+    <div class="col-12 form-input">
+      <form>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Enter Email" ng-model="loginEmail">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" placeholder="Enter Password" ng-model="loginPassword">
+      </div>
+      <div class="form-group forgot-remember">
+        <a href='#'>Forgot Password?</a>
+        <label for="remember">Remember Me</label>
+        <input type="checkbox" id="remember" name="remember" value="remember">
+      </div>
+      <button type="submit" class="btn btn-success" ng-click="loginCheck()">Login</button>
+      <div class="col-12 switch-section">
+        <a href="#" ng-click="showRegisteration()">doesn't have an account? sign up</a>
+      </div>
+      </form>
+    </div>
+    </div>
+  </div>
+
+
+  
+  <div class="col-sm-9 register-section">
+    <div class="modal-content">
+      <div class="register-header">
+      <h2>create an account</h2>
+      </div>
+    <div class="col-12 form-input">
+      <form>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Enter Email" ng-model="registerationEmail"
+        ng-change="liveValidation('registerationEmail', 'emailValidationIndicator', 'emailValidationClass', 'validateEmail')">
+      </div>
+      <div>
+        <p ng-model="emailValidationIndicator" ng-class='emailValidationClass'>{{emailValidationIndicator}}</p>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" placeholder="Enter Password" ng-model="registerationPassword"
+         ng-change="liveValidation('registerationPassword', 'passwordValidationIndicator', 'passwordValidationClass', 'validatePassword')">
+      </div>
+      <div>
+        <p ng-model="passwordValidationIndicator" ng-class='passwordValidationClass'>{{passwordValidationIndicator}}</p>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" placeholder="Verify Password" ng-model="verifiedPassword"
+        ng-change="liveValidation('verifiedPassword', 'verifiedPasswordValidationIndicator',
+         'verifiedPasswordValidationClass', 'validateVerifiedPassword')">
+      </div>
+      <button type="submit" class="btn-success register-button" ng-click="validation()">Register</button>
+      <div class="col-12 switch-section">
+        <a href="#" ng-click="showLogin()">already have an account? log in</a>
+      </div>
+      </form>
+    </div>
+    </div>
+  </div>
+  
+
+  </div>
+
+
+</body>
+</html>

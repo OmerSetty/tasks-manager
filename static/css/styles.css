@@ -1,0 +1,243 @@
+body {
+	font-family: 'Roboto', sans-serif;
+	background: url(../images/mountain.png) no-repeat center center fixed;
+	background-size: cover;
+}
+
+html, body {
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+}
+
+.login-section {
+	margin: 0 auto;
+	margin-top: 200px;
+	padding: 0px;
+}
+
+.register-section {
+	margin: 0 auto;
+	margin-top: 200px;
+	padding: 0px;
+}
+
+.register {
+	margin-top: -500px;
+	transition: 2s;	
+}
+
+.login {
+	margin-top: 200px;
+	transition: 2s;	
+}
+
+.valid {
+	background-color: rgb(186, 255, 108);
+	color: grey;
+	border-radius: 4px;
+	padding: 4px;
+}
+
+.invalid {
+	background-color: pink;
+	color: red;
+	border-radius: 4px;
+	padding: 4px;
+}
+
+.no-validation {
+	padding: 0px;
+}
+
+.modal-content {
+	background-color: #434e5a;
+	opacity: .8;
+	padding: 0px 18px;
+	border-radius: 10px;
+}
+
+.user-img img {
+	height: 120px;
+	width: 120px;
+}
+   
+.user-img {
+	margin-top: -60px;
+	margin-bottom: 45px;
+}
+
+.form-group {
+	margin-bottom: 10px;
+}
+
+.form-group input[type='text'], input[type='password'] {
+	height: 42px;
+	border-radius: 5px;
+	border: 0;
+	font-size: 18px;
+	letter-spacing: 2px;
+}
+
+.form-input button {
+	width: 40%;
+	margin: -50px 0px 25px;
+}
+
+.btn-success {
+	background-color: #1c6288;
+	font-size: 19px;
+	border-radius: 5px;
+	padding: 7px 14px;
+	border: 1px solid #daf1ff;
+	transition: 0.3s all linear;
+}
+
+.btn-success:hover {
+	background-color: #13445e;
+	border: 1px solid #daf1ff;
+}
+
+.register-button {
+	margin-top: 10px !important;
+}
+
+.forgot-remember {
+  margin: -5px 0px 70px;
+}
+
+.forgot-remember a {
+  position: relative;
+  right: 85px;
+}
+
+.forgot-remember label, #remember {
+  position: relative;
+  left: 85px;
+}
+
+.forgot-remember a, label {
+	color: #daf1ff;
+}
+
+.switch-section {
+  margin-bottom: 20px;
+}
+
+.switch-section a {
+  color: #daf1ff;
+}
+
+.register-header h2 {
+	color: #daf1ff;
+	margin-bottom: 30px;
+}
+
+#toast {
+
+	position: fixed;
+	
+	text-align: center;
+	margin: auto;
+	background-color: pink;
+	color: red;
+	padding: 16px;
+
+}
+
+md-toast.md-center {
+	left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  text-align: center;
+  border-radius: 5px;
+}
+
+/*
+body {
+	font-family: 'Roboto', sans-serif;
+	background: url(img/mountain.png) no-repeat center center fixed;
+  background-size: cover;
+  background-color: #4e7de4;
+}
+
+.modal-dialog {
+  position: relative;
+  text-align: center;
+  width: 500px;
+  margin-left: 0 auto;
+  margin-right: 0 auto;
+  left: 35%;
+  top: 50%;
+}
+
+.main-section {
+	margin: 0 auto;
+	margin-top: 130px;
+	padding: 0px;
+}
+
+.modal-content {
+	background-color: #434e5a;
+	opacity: .8;
+	padding: 0px 18px;
+	border-radius: 10px;
+}
+
+.user-img img {
+  margin-top: 20px;
+	height: 120px;
+	width: 120px;
+}
+
+.user-img {
+	margin-top: 0px;
+	margin-bottom: 45px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group input[type='email'], input[type='password'] {
+	height: 42px;
+	border-radius: 5px;
+	border: 0;
+	font-size: 18px;
+  letter-spacing: 2px;
+  padding-left: 20px;
+}
+
+.form-input button {
+	width: 40%;
+	margin: -50px 0px 25px;
+}
+
+.btn-success {
+	background-color: #1c6288;
+	font-size: 19px;
+	border-radius: 5px;
+	padding: 7px 14px;
+	
+	border: 1px solid #daf1ff;
+}
+
+.btn-success:hover {
+	background-color: #13445e;
+	border: 1px solid #daf1ff;
+}
+
+.forgot-remember {
+	position: relative;
+	bottom: 15px;
+}
+.forgot-remember a, label {
+	color: #daf1ff;
+}
+
+.sign-up {
+	padding-bottom: 10px;
+}
+
+.sign-up a {
+	color: #daf1ff;
+}
