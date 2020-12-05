@@ -19,7 +19,6 @@ mongoose.connect(uri, { useNewUrlParser: true })
 // .catch((err) => console.log(err));
 
 
-
 app.use(bodyParser.json());
 
 console.log("app");
